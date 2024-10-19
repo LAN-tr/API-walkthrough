@@ -6,8 +6,29 @@ document.getElementById("status").addEventListener("click", e => getStatus(e));
 // A function to make the request and a function to display the data
 document.getElementById("submit").addEventListener("click", e => postForm(e));
 
+// iterate through the options, push each value into a temporary array, convert the array into a string
+function processOptions(form) {
+
+    let optArray = [];
+
+    for (let entry of form.entries()) {
+        if (entry[0] === "options") {
+            optArray.push(entry[1]);
+        }
+    }
+form.delete("options");
+
+form.append("options", optArray.join());
+
+return form;
+}
+
 async function postForm(e) {
-    const form = new FormData(document.getElementById("checksform"));
+    const form = processOptions(new FormData(document.getElementById("checksform")));
+
+    // for (let entry of form.entries()) {
+        // console.log(entry);
+    // }  test code
 
     const response = await fetch(API_URL, {
         method: "POST",
